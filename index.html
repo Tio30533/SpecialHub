@@ -3,41 +3,65 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Ancient Hub</title>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/dracula.min.css">
+  <title>Luarmor Lua Loader</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/atom-one-dark.min.css">
   <style>
     body {
-      background-color: #2d2d2d;
-      color: #f8f8f2;
+      background-color: #1e1e2e;
+      color: #d4d4d4;
       font-family: 'Courier New', Courier, monospace;
       margin: 0;
       padding: 0;
     }
     .container {
       width: 100%;
-      max-width: 800px;
+      max-width: 900px;
       margin: 0 auto;
       padding: 20px;
+    }
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background-color: #2d2d3a;
+      padding: 10px;
+      border-radius: 5px;
+    }
+    .header h1 {
+      margin: 0;
+      color: #ff79c6;
+    }
+    .header .status {
+      font-size: 14px;
+      color: #50fa7b;
     }
     pre {
       background-color: #282a36;
       border-radius: 5px;
       padding: 15px;
       overflow-x: auto;
+      white-space: pre-wrap;
     }
-    h1 {
+    .footer {
       text-align: center;
-      color: #ff79c6;
+      margin-top: 20px;
+      font-size: 12px;
+      color: #6272a4;
     }
   </style>
 </head>
 <body>
   <div class="container">
-    <h1>Ancient Hub</h1>
+    <div class="header">
+      <h1>Luarmor Lua Loader</h1>
+      <span class="status">Status: Active</span>
+    </div>
     <pre><code class="lua">
-local Hello = "Hello"
-print(Hello)
-    </code></pre>
+      local Hello = "Hello"
+    print(Hello(</code></pre>
+    <div class="footer">
+      <p>Powered by Luarmor</p>
+    </div>
   </div>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
   <script>
