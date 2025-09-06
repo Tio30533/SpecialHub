@@ -1,33 +1,47 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<title>Lua Code Example</title>
-<style>
-  body {
-    background-color: #000; /* black background */
-    color: #fff;           /* white text */
-    font-family: monospace; /* code-like font */
-    padding: 20px;
-  }
-
-  pre {
-    background-color: #111;  /* slightly darker block for code */
-    padding: 15px;
-    border-radius: 5px;
-    overflow-x: auto;
-  }
-
-  code {
-    color: #fff;  /* code text white */
-  }
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ancient Hub</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/dracula.min.css">
+  <style>
+    body {
+      background-color: #2d2d2d;
+      color: #f8f8f2;
+      font-family: 'Courier New', Courier, monospace;
+      margin: 0;
+      padding: 0;
+    }
+    .container {
+      width: 100%;
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+    pre {
+      background-color: #282a36;
+      border-radius: 5px;
+      padding: 15px;
+      overflow-x: auto;
+    }
+    h1 {
+      text-align: center;
+      color: #ff79c6;
+    }
+  </style>
 </head>
 <body>
-<h1>Ancient Hub</h1>
-<pre><code>
+  <div class="container">
+    <h1>Ancient Hub</h1>
+    <pre><code class="lua">
 local Hello = "Hello"
 print(Hello)
-</code></pre>
+    </code></pre>
+  </div>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
+  <script>
+    hljs.highlightAll();
+  </script>
 </body>
 </html>
