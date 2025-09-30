@@ -1,0 +1,35 @@
+local MarketplaceService = game:GetService("MarketplaceService")
+
+local SupportedGames = {
+    ["Steal a Brainrot"] = {109983668079237}
+}
+
+local placeId = game.PlaceId
+local found = false
+
+local function cleanString(str)
+    return (str:gsub("[^%w%s]", ""))
+end
+
+for Game, ids in pairs(SupportedGames) do
+    for _, id in ipairs(ids) do
+        if id == placeId then
+            print(Game .. " is supported!")
+            task.wait(1)
+            loadstring(game:HttpGet(Game))()
+            found = true
+            break
+        end
+    end
+end
+
+if not found then
+    local success, info = pcall(function()
+        return MarketplaceService:GetProductInfo(placeId)
+    end)
+
+    if success then
+        local cleanedName = cleanString(info.Name)
+        warn(cleanedName .. " is not supported!")
+    end
+end
